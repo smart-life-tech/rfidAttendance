@@ -7,7 +7,7 @@
 const char* ssid = "REPLACE_WITH_YOUR_SSID";
 const char* password = "REPLACE_WITH_YOUR_PASSWORD";
 
-String serverName = "localhost";   // REPLACE WITH YOUR computer IP ADDRESS
+String serverName = "http://192.168.1.45";   // REPLACE WITH YOUR computer IP ADDRESS
 //String serverName = "example.com";   // OR REPLACE WITH YOUR DOMAIN NAME
 
 String serverPath = "/rfidattendance/upload.php";     // The default serverPath should be upload.php
