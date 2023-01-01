@@ -3,8 +3,8 @@
 #include <SPI.h>
 #include <MFRC522.h>
 // NodeMCU--------------------------
-#include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
 #include <Adafruit_MLX90614.h>
 #include <Servo.h>
 #include <LiquidCrystal_I2C.h>
