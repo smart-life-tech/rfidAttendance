@@ -10,7 +10,7 @@ const char* password = "REPLACE_WITH_YOUR_PASSWORD";
 String serverName = "http://192.168.1.45";   // REPLACE WITH YOUR computer IP ADDRESS
 //String serverName = "example.com";   // OR REPLACE WITH YOUR DOMAIN NAME
 
-String serverPath = "/rfidattendance/upload.php";     // The default serverPath should be upload.php
+String serverPath = "http://192.168.1.45/rfidattendance/upload.php";     // The default serverPath should be upload.php
 
 const int serverPort = 80;
 
@@ -121,7 +121,7 @@ String sendPhoto() {
   
   Serial.println("Connecting to server: " + serverName);
 
-  if (client.connect(serverName.c_str(), serverPort)) {
+  if (!client.connect(serverName.c_str(), serverPort)) {
     Serial.println("Connection successful!");    
     String head = "--attendance\r\nContent-Disposition: form-data; name=\"imageFile\"; filename=\"esp32-cam.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n";
     String tail = "\r\n--attendance--\r\n";
