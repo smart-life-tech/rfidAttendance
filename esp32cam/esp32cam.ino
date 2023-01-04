@@ -128,8 +128,8 @@ void loop()
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= timerInterval)
   {
-    sendPhoto();
-    // take_send_photo();
+    // sendPhoto();
+    take_send_photo();
     previousMillis = currentMillis;
   }
 }
@@ -294,7 +294,7 @@ static esp_err_t take_send_photo()
   esp_http_client_set_post_field(http_client, (const char *)fb->buf, fb->len);
 
   esp_http_client_set_header(http_client, "Content-Type", "image/jpg");
-
+  // esp_http_client_set_header(http_client, "name", imageFile);
   esp_err_t err = esp_http_client_perform(http_client);
   if (err == ESP_OK)
   {
