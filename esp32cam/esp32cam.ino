@@ -5,7 +5,7 @@
 #include "esp_camera.h"
 #include "esp_http_client.h"
 #include "time.h"
-const int capture_interval = 5000;                        // Microseconds between captures
+const int capture_interval = 5000;                                      // Microseconds between captures
 const char *post_url = "http://192.168.1.45/rfidattendance/upload.php"; // Location where images are POSTED
 
 const char *open_hour = "11";  // the opening hour
@@ -120,7 +120,7 @@ void setup()
     ESP.restart();
   }
 
-  sendPhoto();
+  // sendPhoto();
 }
 
 void loop()
@@ -128,8 +128,8 @@ void loop()
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= timerInterval)
   {
-    //sendPhoto();
-    take_send_photo();
+    sendPhoto();
+    // take_send_photo();
     previousMillis = currentMillis;
   }
 }
@@ -147,7 +147,7 @@ String sendPhoto()
     delay(1000);
     ESP.restart();
   }
-
+  Serial.println("Camera capture sucessfull");
   Serial.println("Connecting to server: " + serverName);
 
   if (!client.connect(serverName.c_str(), serverPort))
@@ -233,35 +233,37 @@ String sendPhoto()
 }
 esp_err_t _http_event_handler(esp_http_client_event_t *evt)
 {
-  switch (evt->event_id) {
-    case HTTP_EVENT_ERROR:
-      Serial.println("HTTP_EVENT_ERROR");
-      break;
-    case HTTP_EVENT_ON_CONNECTED:
-      Serial.println("HTTP_EVENT_ON_CONNECTED");
-      break;
-    case HTTP_EVENT_HEADER_SENT:
-      Serial.println("HTTP_EVENT_HEADER_SENT");
-      break;
-    case HTTP_EVENT_ON_HEADER:
-      Serial.println();
-      Serial.printf("HTTP_EVENT_ON_HEADER, key=%s, value=%s", evt->header_key, evt->header_value);
-      break;
-    case HTTP_EVENT_ON_DATA:
-      Serial.println();
-      Serial.printf("HTTP_EVENT_ON_DATA, len=%d", evt->data_len);
-      if (!esp_http_client_is_chunked_response(evt->client)) {
-        // Write out data
-        // printf("%.*s", evt->data_len, (char*)evt->data);
-      }
-      break;
-    case HTTP_EVENT_ON_FINISH:
-      Serial.println("");
-      Serial.println("HTTP_EVENT_ON_FINISH");
-      break;
-    case HTTP_EVENT_DISCONNECTED:
-      Serial.println("HTTP_EVENT_DISCONNECTED");
-      break;
+  switch (evt->event_id)
+  {
+  case HTTP_EVENT_ERROR:
+    Serial.println("HTTP_EVENT_ERROR");
+    break;
+  case HTTP_EVENT_ON_CONNECTED:
+    Serial.println("HTTP_EVENT_ON_CONNECTED");
+    break;
+  case HTTP_EVENT_HEADER_SENT:
+    Serial.println("HTTP_EVENT_HEADER_SENT");
+    break;
+  case HTTP_EVENT_ON_HEADER:
+    Serial.println();
+    Serial.printf("HTTP_EVENT_ON_HEADER, key=%s, value=%s", evt->header_key, evt->header_value);
+    break;
+  case HTTP_EVENT_ON_DATA:
+    Serial.println();
+    Serial.printf("HTTP_EVENT_ON_DATA, len=%d", evt->data_len);
+    if (!esp_http_client_is_chunked_response(evt->client))
+    {
+      // Write out data
+      // printf("%.*s", evt->data_len, (char*)evt->data);
+    }
+    break;
+  case HTTP_EVENT_ON_FINISH:
+    Serial.println("");
+    Serial.println("HTTP_EVENT_ON_FINISH");
+    break;
+  case HTTP_EVENT_DISCONNECTED:
+    Serial.println("HTTP_EVENT_DISCONNECTED");
+    break;
   }
   return ESP_OK;
 }
@@ -278,7 +280,8 @@ static esp_err_t take_send_photo()
     Serial.println("Camera capture failed");
     return ESP_FAIL;
   }
-
+  String head = "--attendance\r\nContent-Disposition: form-data; name=\"imageFile\"; filename=\"esp32-cam.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n";
+  String tail = "\r\n--attendance--\r\n";
   esp_http_client_handle_t http_client;
 
   esp_http_client_config_t config_client = {0};
