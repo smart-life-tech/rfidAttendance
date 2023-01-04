@@ -292,7 +292,9 @@ static esp_err_t take_send_photo()
   http_client = esp_http_client_init(&config_client);
 
   esp_http_client_set_post_field(http_client, (const char *)fb->buf, fb->len);
-
+   esp_http_client_set_header(http_client, "Content-Disposition", "form-data");
+  esp_http_client_set_header(http_client, "name", "imageFile");
+  esp_http_client_set_header(http_client, "filename", "esp32-cam");
   esp_http_client_set_header(http_client, "Content-Type", "image/jpg");
   // esp_http_client_set_header(http_client, "name", imageFile);
   esp_err_t err = esp_http_client_perform(http_client);
