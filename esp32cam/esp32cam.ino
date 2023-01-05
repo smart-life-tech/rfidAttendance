@@ -129,7 +129,7 @@ void loop()
   if (currentMillis - previousMillis >= timerInterval)
   {
     sendPhoto();
-    take_send_photo();
+    //take_send_photo();
     previousMillis = currentMillis;
   }
 }
