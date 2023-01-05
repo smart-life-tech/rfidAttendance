@@ -25,7 +25,7 @@ const char *close_hour = "14"; // the closing hour
 const char *ssid = "REPLACE_WITH_YOUR_SSID";
 const char *password = "REPLACE_WITH_YOUR_PASSWORD";
 
-String serverName = "http://192.168.1.45"; // REPLACE WITH YOUR computer IP ADDRESS
+String serverName = "http://192.168.1.45/rfidattendance/upload.php"; // REPLACE WITH YOUR computer IP ADDRESS
 // String serverName = "example.com";   // OR REPLACE WITH YOUR DOMAIN NAME
 
 String serverPath = "http://192.168.1.45/rfidattendance/upload.php"; // The default serverPath should be upload.php
@@ -128,7 +128,7 @@ void loop()
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= timerInterval)
   {
-    // sendPhoto();
+    sendPhoto();
     take_send_photo();
     previousMillis = currentMillis;
   }
@@ -150,7 +150,7 @@ String sendPhoto()
   Serial.println("Camera capture sucessfull");
   Serial.println("Connecting to server: " + serverName);
 
-  if (!client.connect(serverName.c_str(), serverPort))
+  if (client.connect(serverName.c_str(), serverPort))
   {
     Serial.println("Connection successful!");
     String head = "--attendance\r\nContent-Disposition: form-data; name=\"imageFile\"; filename=\"esp32-cam.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n";
