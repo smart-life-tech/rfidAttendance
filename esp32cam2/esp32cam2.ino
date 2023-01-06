@@ -8,7 +8,7 @@
 const char *ssid = "YOUR_WIFI_SSID";
 const char *password = "YOUR_WIFI_PASSWORD";
 
-const char *server = "YOUR_PHP_SERVER_URL";
+const char *server = "http://192.168.1.45/rfidattendance/upload.php";
 
 void setup()
 {
