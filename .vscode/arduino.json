@@ -1,5 +1,5 @@
 {
     "board": "esp32:esp32:esp32",
-    "sketch": "esp32cam\\esp32cam.ino",
+    "sketch": "esp32cam2\\esp32cam2.ino",
     "configuration": "PSRAM=disabled,PartitionScheme=default,CPUFreq=240,FlashMode=qio,FlashFreq=80,FlashSize=4M,UploadSpeed=921600,LoopCore=1,EventsCore=1,DebugLevel=none,EraseFlash=none"
 }
