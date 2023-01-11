@@ -5,8 +5,8 @@
 #include "soc/rtc_cntl_reg.h"
 #include "esp_camera.h"
 
-const char *ssid = "REPLACE_WITH_YOUR_SSID";
-const char *password = "REPLACE_WITH_YOUR_PASSWORD";
+const char *ssid = "TECNO SPARK 5 Air";
+const char *password = "1234567890";
 char serverName2[] = "http://192.168.1.45/rfidattendance/upload.php";
 String serverName = "http://192.168.1.45/rfidattendance/upload.php"; // REPLACE WITH YOUR  IP ADDRESS
 // String serverName = "example.com";   // OR REPLACE WITH YOUR DOMAIN NAME
