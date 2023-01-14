@@ -7,7 +7,8 @@
 
 const char *ssid = "TECNO SPARK 5 Air";
 const char *password = "1234567890";
-char serverName2[] = "http://192.168.1.45/rfidattendance/upload.php";
+char serverName2[] = "192.168.43.194";
+IPAddress server(192, 168, 43, 194);
 String serverName = "http://192.168.1.45/rfidattendance/upload.php"; // REPLACE WITH YOUR  IP ADDRESS
 // String serverName = "example.com";   // OR REPLACE WITH YOUR DOMAIN NAME
 
@@ -100,7 +101,7 @@ void setup()
   {
     Serial.printf("Camera init failed with error 0x%x", err);
     delay(1000);
-    ESP.restart();
+    // ESP.restart();
   }
 
   sendPhoto();
@@ -132,7 +133,7 @@ String sendPhoto()
   Serial.println("Camera capture sucessful");
   Serial.println("Connecting to server: " + serverName);
 
-  if (client.connect(serverName2, serverPort))
+  if (client.connect(server, serverPort))
   {
     Serial.println("Connection successful!");
     String head = "--attendance\r\nContent-Disposition: form-data; name=\"imageFile\"; filename=\"esp32-cam.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n";
@@ -211,6 +212,12 @@ String sendPhoto()
   {
     getBody = "Connection to " + serverName + " failed.";
     Serial.println(getBody);
+    while (client.available())
+    {
+      // read an incoming byte from the server and print them to serial monitor:
+      char c = client.read();
+      Serial.print(c);
+    }
   }
   return getBody;
 }
