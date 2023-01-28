@@ -11,7 +11,7 @@ char serverName2[] = "192.168.43.194";
 IPAddress server(192, 168, 43, 194);
 String serverName = "http://192.168.1.45/rfidattendance/upload.php"; // REPLACE WITH YOUR  IP ADDRESS
 // String serverName = "example.com";   // OR REPLACE WITH YOUR DOMAIN NAME
-int number=0;
+int number = 0;
 String serverPath = "http://192.168.1.45/rfidattendance/upload.php"; // The default serverPath should be upload.php
 
 const int serverPort = 80;
@@ -110,7 +110,8 @@ void setup()
 void loop()
 {
   unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis >= timerInterval)
+  //  if (currentMillis - previousMillis >= timerInterval)
+  if (digitalRead(12) == HIGH)
   {
     sendPhoto();
     previousMillis = currentMillis;
@@ -134,9 +135,10 @@ String sendPhoto()
   Serial.println("Connecting to server: " + serverName);
 
   if (client.connect(server, serverPort))
-  {number++;
+  {
+    number++;
     Serial.println("Connection successful!");
-    String head = "--attendance\r\nContent-Disposition: form-data; name=\"imageFile\"; filename=\"esp32-cam"+String(number)+".jpg\"\r\nContent-Type: image/jpeg\r\n\r\n";
+    String head = "--attendance\r\nContent-Disposition: form-data; name=\"imageFile\"; filename=\"esp32-cam" + String(number) + ".jpg\"\r\nContent-Type: image/jpeg\r\n\r\n";
     String tail = "\r\n--attendance--\r\n";
 
     uint32_t imageLen = fb->len;
