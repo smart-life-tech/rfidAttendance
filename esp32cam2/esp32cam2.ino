@@ -36,7 +36,7 @@ WiFiClient client;
 #define VSYNC_GPIO_NUM 25
 #define HREF_GPIO_NUM 23
 #define PCLK_GPIO_NUM 22
-
+int trigger =12;
 const int timerInterval = 30000;  // time between each HTTP POST image
 unsigned long previousMillis = 0; // last time image was sent
 
@@ -44,7 +44,7 @@ void setup()
 {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
   Serial.begin(115200);
-
+pinMode(trigger,INPUT);
   WiFi.mode(WIFI_STA);
   Serial.println();
   Serial.print("Connecting to ");
@@ -111,7 +111,7 @@ void loop()
 {
   unsigned long currentMillis = millis();
   //  if (currentMillis - previousMillis >= timerInterval)
-  if (digitalRead(12) == HIGH)
+  if (digitalRead(trigger) == HIGH)
   {
     sendPhoto();
     previousMillis = currentMillis;
