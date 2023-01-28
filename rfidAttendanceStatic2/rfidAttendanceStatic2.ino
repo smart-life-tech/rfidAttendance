@@ -12,19 +12,20 @@
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 Servo myservo; // create servo object to control a servo
 Adafruit_MLX90614 mlx = Adafruit_MLX90614();
-float bodyTemp = 35.0;
+float bodyTemp = 38.0;
 float temp = 0.0;
 //************************************************************************
 #define SS_PIN 2    // D2
 #define RST_PIN 16  // D1
 #define ServoPin 15 // D5 is GPIO14
+int cameraTrigger = 10;
 //************************************************************************
 MFRC522 mfrc522(SS_PIN, RST_PIN); // Create MFRC522 instance.
 //************************************************************************
 /* Set these to your desired credentials. */
 const char *ssid = "Service Provider";
 const char *password = "@Matinik298-2021";
-const char *device_token = "79f3acf63de9173d";
+const char *device_token = "1622320d76d42edf";
 //************************************************************************
 String URL = "http://192.168.1.45/rfidattendance/getdata.php"; // computer IP or the server domain
 String getData, Link;
@@ -37,6 +38,7 @@ void setup()
 {
   delay(1000);
   Serial.begin(115200);
+  pinMode(cameraTrigger, OUTPUT);
   if (!mlx.begin())
   {
     Serial.println("Error connecting to MLX sensor. Check wiring.");
@@ -166,11 +168,18 @@ void SendCardID(String Card_uid)
       {
         String user_name = payload.substring(5);
         Serial.println(user_name);
+        lcd.clear();
         lcd.setCursor(0, 0); // Set cursor to character 2 on line 0
-        lcd.print("SUCESSFUL, check temp");
+        lcd.print("SUCCESS LOGIN");
         lcd.setCursor(0, 1); // Move cursor to character 2 on line 1
-        lcd.print("sensor on 5 sec");
-        //checkTemperature();
+        lcd.print("THANK YOU!");
+        delay(1000);
+        lcd.clear();
+        lcd.setCursor(0, 0); // Set cursor to character 2 on line 0
+        lcd.print("WELCOME ");
+        lcd.setCursor(0, 1); // Move cursor to character 2 on line 1
+        lcd.print("PLACE YOUR CARD");
+        // checkTemperature();
       }
 
       else if (payload.substring(0, 6) == "logout")
@@ -188,7 +197,7 @@ void SendCardID(String Card_uid)
         lcd.print("WELCOME ");
         lcd.setCursor(0, 1); // Move cursor to character 2 on line 1
         lcd.print("PLACE YOUR CARD");
-        //checkTemperature();
+        // checkTemperature();
         delay(100);
       }
       else if (payload == "succesful")
@@ -198,7 +207,7 @@ void SendCardID(String Card_uid)
         lcd.print("SUCESSFUL, check temp");
         lcd.setCursor(0, 1); // Move cursor to character 2 on line 1
         lcd.print("sensor on 5 sec");
-        //checkTemperature();
+        // checkTemperature();
       }
       else if (payload == "available")
       {
@@ -207,7 +216,7 @@ void SendCardID(String Card_uid)
         lcd.print("SUCESSFUL, check temp");
         lcd.setCursor(0, 1); // Move cursor to character 2 on line 1
         lcd.print("sensor on 5 sec");
-        //checkTemperature();
+        // checkTemperature();
       }
       delay(100);
       http.end(); // Close connection
@@ -247,7 +256,7 @@ void checkTemperature(int read)
     lcd.print("PLACE YOUR CARD");
     temp = 0;
   }
-  else if (temp > 30 && temp < bodyTemp)
+  else if (temp > 25 && temp < bodyTemp)
   {
     openGate();
     temp = 0;
@@ -270,7 +279,9 @@ void openGate()
   lcd.setCursor(0, 1); // Move cursor to character 2 on line 1
   lcd.print(temp);
   myservo.write(180); // tell servo to go to position
+  digitalWrite(cameraTrigger,HIGH);
   delay(3000);
+  digitalWrite(cameraTrigger,LOW);
   myservo.write(0); // tell servo to go to position
   lcd.clear();
   lcd.setCursor(0, 0); // Set cursor to character 2 on line 0
@@ -302,6 +313,10 @@ void connectToWiFi()
 }
 int checkTemperatures()
 {
+  lcd.setCursor(0, 0); // Set cursor to character 2 on line 0
+  lcd.print("SUCESSFUL, check temp");
+  lcd.setCursor(0, 1); // Move cursor to character 2 on line 1
+  lcd.print("sensor on 5 sec");
   delay(5000);
   Serial.print("temperature in use  = ");
   Serial.print(mlx.readObjectTempC());
@@ -309,5 +324,10 @@ int checkTemperatures()
   Serial.print("   ");
   Serial.print("Object temperature sent to server  = ");
   Serial.println(mlx.readObjectTempC());
+  lcd.clear();
+  lcd.setCursor(0, 0); // Set cursor to character 2 on line 0
+  lcd.print("TEMPARATURE IS");
+  lcd.setCursor(0, 1); // Move cursor to character 2 on line 1
+  lcd.print(mlx.readObjectTempC());
   return mlx.readObjectTempC();
 }
