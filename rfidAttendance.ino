@@ -17,6 +17,7 @@ float bodyTemp = 30.0;
 #define SS_PIN 2   // D2
 #define RST_PIN 16 // D1
 #define ServoPin 9 // D5 is GPIO14
+int cameraTrigger = 10;
 //************************************************************************
 MFRC522 mfrc522(SS_PIN, RST_PIN); // Create MFRC522 instance.
 //************************************************************************
@@ -46,6 +47,7 @@ void setup()
   lcd.init();
   pinMode(Active_buzzer, OUTPUT);
   myservo.attach(ServoPin);
+  pinMode(cameraTrigger, OUTPUT);
   SPI.begin();        // Init SPI bus
   mfrc522.PCD_Init(); // Init MFRC522 card
   //---------------------------------------------
@@ -68,6 +70,7 @@ void setup()
   lcd.setCursor(0, 1); // Move cursor to character 2 on line 1
   lcd.print("PLACE YOUR CARD");
   Serial.println("main loop started");
+  digitalWrite(cameraTrigger, LOW);
 }
 void loop()
 {
@@ -109,8 +112,8 @@ void loop()
     OldCardID = CardID;
   }
   //---------------------------------------------
-  / Serial.println(CardID);
-  //checkTemperature();// if its resetting comment out this line
+  // Serial.println(CardID);
+  // checkTemperature();// if its resetting comment out this line
   SendCardID(CardID);
   delay(1000);
 }
@@ -122,8 +125,8 @@ void SendCardID(String Card_uid)
   {
     WiFiClient wifiClient;
     HTTPClient http; // Declare object of class HTTPClient
-    // GET Data
-      last_temp = mlx.readObjectTempC();
+                     // GET Data
+    last_temp = mlx.readObjectTempC();
     Serial.print("temp to be sent :");
     Serial.println(last_temp);
     getData = "?card_uid=" + String(Card_uid) + "&device_token=" + String(device_token) + "&temp=" + String(last_temp); // Add the Card ID to the GET array in order to send it
@@ -181,10 +184,10 @@ void SendCardID(String Card_uid)
 void checkTemperature()
 {
   delay(2000);
- // Serial.print("Ambient temperature = ");
-  //Serial.print(mlx.readAmbientTempC());
-  //Serial.print("°C");
-  //Serial.print("   ");
+  // Serial.print("Ambient temperature = ");
+  // Serial.print(mlx.readAmbientTempC());
+  // Serial.print("°C");
+  // Serial.print("   ");
   Serial.print("Object temperature = ");
   last_temp = mlx.readObjectTempC();
   Serial.print(mlx.readObjectTempC());
@@ -228,7 +231,9 @@ void openGate()
   lcd.setCursor(0, 1); // Move cursor to character 2 on line 1
   lcd.print("TEMP IS NORMAL");
   myservo.write(90); // tell servo to go to position
+  digitalWrite(cameraTrigger, HIGH);
   delay(2000);
+  digitalWrite(cameraTrigger, LOW);
   myservo.write(0); // tell servo to go to position
   lcd.clear();
   lcd.setCursor(0, 0); // Set cursor to character 2 on line 0
