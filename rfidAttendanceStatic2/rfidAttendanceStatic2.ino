@@ -38,7 +38,7 @@ void setup()
 {
   delay(1000);
   Serial.begin(115200);
-  pinMode(cameraTrigger, OUTPUT);
+ // pinMode(cameraTrigger, OUTPUT);
   if (!mlx.begin())
   {
     Serial.println("Error connecting to MLX sensor. Check wiring.");
@@ -227,8 +227,8 @@ void SendCardID(String Card_uid)
 void checkTemperature(int read)
 {
   delay(5000);
-  Serial.print("Ambient temperature in use = ");
-  Serial.print(mlx.readAmbientTempC());
+  //Serial.print("Ambient temperature in use = ");
+  //Serial.print(mlx.readAmbientTempC());
   // temp = mlx.readObjectTempC();
   temp = read;
   Serial.print("°C");
@@ -276,12 +276,13 @@ void openGate()
   String temps = String(mlx.readObjectTempC(), 3);
   lcd.setCursor(0, 0); // Set cursor to character 2 on line 0
   lcd.print("open, temp is :");
+  Serial.println("captured image");
   lcd.setCursor(0, 1); // Move cursor to character 2 on line 1
   lcd.print(temp);
   myservo.write(180); // tell servo to go to position
-  digitalWrite(cameraTrigger,HIGH);
+  //digitalWrite(cameraTrigger,HIGH);
   delay(3000);
-  digitalWrite(cameraTrigger,LOW);
+  //digitalWrite(cameraTrigger,LOW);
   myservo.write(0); // tell servo to go to position
   lcd.clear();
   lcd.setCursor(0, 0); // Set cursor to character 2 on line 0
