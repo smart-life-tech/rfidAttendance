@@ -121,7 +121,7 @@ void loop()
 }
 //************send the Card UID to the website*************
 void SendCardID(String Card_uid)
-{
+{ Serial.println("captured image");
   Serial.println("Sending the Card ID");
   if (WiFi.isConnected())
   {
@@ -276,7 +276,7 @@ void openGate()
   String temps = String(mlx.readObjectTempC(), 3);
   lcd.setCursor(0, 0); // Set cursor to character 2 on line 0
   lcd.print("open, temp is :");
-  Serial.println("captured image");
+ 
   lcd.setCursor(0, 1); // Move cursor to character 2 on line 1
   lcd.print(temp);
   myservo.write(180); // tell servo to go to position
