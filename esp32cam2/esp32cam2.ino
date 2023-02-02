@@ -39,12 +39,15 @@ WiFiClient client;
 int trigger = 12;
 const int timerInterval = 30000;  // time between each HTTP POST image
 unsigned long previousMillis = 0; // last time image was sent
-
+// ledPin refers to ESP32-CAM GPIO 4 (flashlight)
+#define FLASH_GPIO_NUM 4
 void setup()
 {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
   Serial.begin(115200);
   // pinMode(trigger,INPUT);
+    pinMode(FLASH_GPIO_NUM, OUTPUT);
+
   WiFi.mode(WIFI_STA);
   Serial.println();
   Serial.print("Connecting to ");
@@ -105,7 +108,7 @@ void setup()
     // ESP.restart();
   }
 
-  sendPhoto();
+  //sendPhoto();
 }
 
 void loop()
@@ -119,7 +122,9 @@ void loop()
     {
       // Read serial data byte and send back to serial monitor
       //  if (currentMillis - previousMillis >= timerInterval)
+        digitalWrite(FLASH_GPIO_NUM, HIGH);
       sendPhoto();
+        digitalWrite(FLASH_GPIO_NUM, LOW);
       previousMillis = currentMillis;
     }
   }
